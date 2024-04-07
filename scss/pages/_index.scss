@@ -1,0 +1,21 @@
+.img-bg {
+  background-image: url("../media/img/default_bg.jpg");
+  background-position: center;
+  background-size: cover;
+}
+
+.content {
+  min-height: 100vh;
+
+  &-box {
+    max-width: 1024px;
+
+    .blurry-bg {
+      background: rgba(255, 255, 255, 0.40);
+      border-radius: 16px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(7.8px);
+      -webkit-backdrop-filter: blur(7.8px);
+    }
+  }
+}

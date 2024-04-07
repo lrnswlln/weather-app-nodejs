@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="assets/css/main.css" rel="stylesheet">
+
+    <title>Wetteranwendung</title>
+</head>
+<body>
+
+<div class="img-bg container-fluid">
+    <div class="content container d-flex justify-content-center align-items-center">
+        <div class="content-box my-5 text-center">
+            <form id="search-form">
+                <label for="cityName">Stadt:</label>
+                <input class="form-control blurry-bg rounded-5" type="text" id="cityName" name="cityName">
+                <button class="btn btn-outline-secondary" type="submit">Wetter abrufen</button>
+            </form>
+            <div class="display-weather blurry-bg rounded-5 p-4">
+                <div id="weatherDisplayError"></div>
+                <div id="weatherDisplay"></div>
+                <div id="forecastDisplay"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="app.js" defer></script>
+
+</body>
+</html>

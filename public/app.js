@@ -75,32 +75,34 @@ var _this = this;
 var weatherDisplayError = document.getElementById('weatherDisplayError');
 function displayWeather(weatherData, forecastData) {
     var weatherDisplay = document.getElementById('weatherDisplay');
+    var weatherInformationBox = document.getElementById('weather-information-box');
+    weatherInformationBox.classList.remove("d-none");
     weatherDisplayError.innerHTML = "";
     if (weatherDisplay) {
-        weatherDisplay.innerHTML = "\n            <h2>Aktuelles Wetter in ".concat(weatherData.name, ", ").concat(weatherData.sys.country, "</h2>\n            <p>").concat(getCurrentTime(weatherData.timezone), "</p>\n            <div class=\"d-flex justify-content-center align-items-center\">\n                        <img src=\"http://openweathermap.org/img/wn/").concat(weatherData.weather[0].icon, "@4x.png\" alt=\"Wettericon\">\n                        <h1>").concat(weatherData.main.temp.toFixed(1), "\u00B0C</h1>\n            </div>\n            <div class=\"d-flex justify-content-around\">\n            <p>Luftfeuchtigkeit: ").concat(weatherData.main.humidity, "%</p>\n            <p>Luftfdruck: ").concat(weatherData.main.pressure, "hPa</p>\n            <p>Gef\u00FChlte Temp.: ").concat(weatherData.main.feels_like.toFixed(1), "\u00B0C</p>\n            </div>\n            <h3 class=\"mt-4\">Wettervorhersage f\u00FCr die n\u00E4chsten Stunden:</h3>\n            <div class=\"row g-4 text-center\">\n                ").concat(forecastData.list.slice(0, 7).map(function (forecast) { return "\n                    <div class=\"forecast col\">\n                        <div class=\"forcast-hr-element\">\n                            <div class=\"bg-transparent\">\n                                <p class=\"card-text\">".concat(formatTime(forecast.dt_txt), "</p>\n                                <img src=\"http://openweathermap.org/img/wn/").concat(forecast.weather[0].icon, ".png\" alt=\"Wettericon\">\n                                <p class=\"card-text\">").concat(forecast.main.temp.toFixed(1), "\u00B0C</p>\n                            </div>\n                        </div>\n                    </div>\n                "); }).join(''), "\n            </div>\n        ");
-        // Weitere Anzeigeoptionen für Wetterdaten und Wettervorhersage hier hinzufügen
+        console.log(weatherData.timezone);
+        weatherDisplay.innerHTML = "\n            <h2>".concat(weatherData.name, ", ").concat(weatherData.sys.country, "</h2>\n            <p>").concat(getCurrentTime(weatherData.timezone), "</p>\n            <div class=\"d-flex justify-content-center align-items-center\">\n                        <img src=\"http://openweathermap.org/img/wn/").concat(weatherData.weather[0].icon, "@4x.png\" alt=\"Wettericon\">\n                        <h1>").concat(weatherData.main.temp.toFixed(1), "\u00B0C</h1>\n            </div>\n            <div class=\"sun-time d-flex justify-content-evenly\">\n            <div class=\"sunrise d-flex flex-column align-self-end\">\n            <i class=\"bi bi-sunrise\" style=\"font-size: 2rem;\"></i>\n            <p class=\"mb-0\">").concat(formatTimeFromUnix(weatherData.sys.sunrise, weatherData.timezone), "</p>\n            </div>\n                       <img class=\"sun-circle\" src=\"assets/media/img/sonnenverlauf.svg\">\n\n            <div class=\"sunset d-flex flex-column align-self-end\">\n            <i class=\"bi bi-sunrise\" style=\"font-size: 2rem;\"></i>\n            <p class=\"mb-0\">").concat(formatTimeFromUnix(weatherData.sys.sunset, weatherData.timezone), "</p>\n            </div>\n            \n            </div>\n            <div class=\"d-flex justify-content-around\">\n                <p>").concat(weatherData.main.humidity, "%<br><span class=\"fw-light fs-6\">Luftfeuchtigkeit</span> </p>\n                <p>Luftfdruck: ").concat(weatherData.main.pressure, "hPa</p>\n                <p>Gef\u00FChlte Temp.: ").concat(weatherData.main.feels_like.toFixed(1), "\u00B0C</p>\n            </div>\n            <h3 class=\"mt-4\">Wettervorhersage f\u00FCr die n\u00E4chsten Stunden:</h3>\n            <div class=\"row g-4 text-center\">\n                ").concat(forecastData.list.slice(0, 7).map(function (forecast) { return "\n                    <div class=\"forecast col\">\n                        <div class=\"forcast-hr-element\">\n                            <div class=\"bg-transparent\">\n                                <p class=\"card-text\">".concat(formatTime(forecast.dt_txt), "</p>\n                                <img src=\"http://openweathermap.org/img/wn/").concat(forecast.weather[0].icon, ".png\" alt=\"Wettericon\">\n                                <p class=\"card-text\">").concat(forecast.main.temp.toFixed(1), "\u00B0C</p>\n                            </div>\n                        </div>\n                    </div>\n                "); }).join(''), "\n            </div>\n        ");
     }
 }
 function displayWeatherError() {
     weatherDisplayError.innerHTML = "<div class=\"alert alert-danger\" role=\"alert\">\n    Bitte \u00DCberpr\u00FCfe den gesuchten ort in der Eingabe auf Richtigkeit!\n    </div>";
 }
-// Funktion zur Formatierung des Datums im europäischen Format und Anzeige des Wochentags
+// Formatierung des Datums im europäischen Format
 function formatDate(dateString) {
     var date = new Date(dateString.replace(/-/g, '/'));
     var options = { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' };
     return date.toLocaleDateString('de-DE').replace(/,/g, '');
 }
-// Funktion zur Formatierung der Uhrzeit
+// Formatierung der Uhrzeit
 function formatTime(dateString) {
     var date = new Date(dateString.replace(/-/g, '/'));
     return date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
 }
-// Funktion zur Formatierung der Uhrzeit aus Unix-Zeitstempel
+// Formatierung der Uhrzeit aus dem Unix-Zeitstempel
 function formatTimeFromUnix(unixTime, timezoneOffset) {
-    var date = new Date((unixTime + timezoneOffset) * 1000);
+    var date = new Date((unixTime + timezoneOffset - 7200) * 1000);
     return date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
 }
-// Funktion zur Anzeige der aktuellen Uhrzeit für den angegebenen Ort
+// Anzeige der aktuellen Uhrzeit für den angegebenen Ort
 function getCurrentTime(timezoneOffset) {
     var now = new Date();
     var localTime = now.getTime() + (now.getTimezoneOffset() * 60000); // In Minuten

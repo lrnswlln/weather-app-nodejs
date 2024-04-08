@@ -22,24 +22,40 @@ document.getElementById("search-form")?.addEventListener("submit", async (event)
 
 const weatherDisplayError = document.getElementById('weatherDisplayError');
 
-
 function displayWeather(weatherData: any, forecastData: any) {
     const weatherDisplay = document.getElementById('weatherDisplay');
+    const weatherInformationBox = document.getElementById('weather-information-box');
+
+    weatherInformationBox.classList.remove("d-none");
 
     weatherDisplayError.innerHTML = ``;
 
     if (weatherDisplay) {
+        console.log(weatherData.timezone);
         weatherDisplay.innerHTML = `
-            <h2>Aktuelles Wetter in ${weatherData.name}, ${weatherData.sys.country}</h2>
+            <h2>${weatherData.name}, ${weatherData.sys.country}</h2>
             <p>${getCurrentTime(weatherData.timezone)}</p>
             <div class="d-flex justify-content-center align-items-center">
                         <img src="http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@4x.png" alt="Wettericon">
                         <h1>${weatherData.main.temp.toFixed(1)}°C</h1>
             </div>
+            <div class="sun-time d-flex justify-content-evenly">
+            <div class="sunrise d-flex flex-column align-self-end">
+            <i class="bi bi-sunrise" style="font-size: 2rem;"></i>
+            <p class="mb-0">${formatTimeFromUnix(weatherData.sys.sunrise, weatherData.timezone)}</p>
+            </div>
+                       <img class="sun-circle" src="assets/media/img/sonnenverlauf.svg">
+
+            <div class="sunset d-flex flex-column align-self-end">
+            <i class="bi bi-sunrise" style="font-size: 2rem;"></i>
+            <p class="mb-0">${formatTimeFromUnix(weatherData.sys.sunset, weatherData.timezone)}</p>
+            </div>
+            
+            </div>
             <div class="d-flex justify-content-around">
-            <p>Luftfeuchtigkeit: ${weatherData.main.humidity}%</p>
-            <p>Luftfdruck: ${weatherData.main.pressure}hPa</p>
-            <p>Gefühlte Temp.: ${weatherData.main.feels_like.toFixed(1)}°C</p>
+                <p>${weatherData.main.humidity}%<br><span class="fw-light fs-6">Luftfeuchtigkeit</span> </p>
+                <p>Luftfdruck: ${weatherData.main.pressure}hPa</p>
+                <p>Gefühlte Temp.: ${weatherData.main.feels_like.toFixed(1)}°C</p>
             </div>
             <h3 class="mt-4">Wettervorhersage für die nächsten Stunden:</h3>
             <div class="row g-4 text-center">
@@ -56,7 +72,6 @@ function displayWeather(weatherData: any, forecastData: any) {
                 `).join('')}
             </div>
         `;
-        // Weitere Anzeigeoptionen für Wetterdaten und Wettervorhersage hier hinzufügen
     }
 }
 
@@ -67,26 +82,26 @@ function displayWeatherError() {
 
 }
 
-// Funktion zur Formatierung des Datums im europäischen Format und Anzeige des Wochentags
+// Formatierung des Datums im europäischen Format
 function formatDate(dateString: string): string {
     const date = new Date(dateString.replace(/-/g, '/'));
     const options = {weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric'};
     return date.toLocaleDateString('de-DE').replace(/,/g, '');
 }
 
-// Funktion zur Formatierung der Uhrzeit
+// Formatierung der Uhrzeit
 function formatTime(dateString: string): string {
     const date = new Date(dateString.replace(/-/g, '/'));
     return date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
 }
 
-// Funktion zur Formatierung der Uhrzeit aus Unix-Zeitstempel
+// Formatierung der Uhrzeit aus dem Unix-Zeitstempel
 function formatTimeFromUnix(unixTime: number, timezoneOffset: number): string {
-    const date = new Date((unixTime + timezoneOffset) * 1000);
+    const date = new Date((unixTime + timezoneOffset - 7200) * 1000);
     return date.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
 }
 
-// Funktion zur Anzeige der aktuellen Uhrzeit für den angegebenen Ort
+// Anzeige der aktuellen Uhrzeit für den angegebenen Ort
 function getCurrentTime(timezoneOffset: number): string {
     const now = new Date();
     const localTime = now.getTime() + (now.getTimezoneOffset() * 60000); // In Minuten

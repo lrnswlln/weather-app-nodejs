@@ -1,5 +1,5 @@
 .img-bg {
-  background-image: url("../media/img/default_bg.jpg");
+  background-image: linear-gradient(rgb(35 35 35 / 68%), rgb(61 61 61 / 57%)), url(../media/img/default_bg.jpg);
   background-position: center;
   background-size: cover;
 }
@@ -11,11 +11,16 @@
     max-width: 1024px;
 
     .blurry-bg {
-      background: rgba(255, 255, 255, 0.40);
+      background: rgb(184 184 184 / 52%);
       border-radius: 16px;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(7.8px);
-      -webkit-backdrop-filter: blur(7.8px);
+      box-shadow: 0 4px 30px rgba(0,0,0,.1);
+      backdrop-filter: blur(5.8px);
     }
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .sun-circle {
+    width: 50vw;
   }
 }

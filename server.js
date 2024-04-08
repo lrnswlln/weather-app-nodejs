@@ -38,7 +38,6 @@ app.post('/weather', async (req, res) => {
         const weatherApiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric`;
         const forecastApiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=metric`;
 
-        // Dynamischer Import von node-fetch
         const fetch = (await import('node-fetch')).default;
 
         const [weatherResponse, forecastResponse] = await Promise.all([

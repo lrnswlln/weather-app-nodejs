@@ -72,16 +72,41 @@ var _this = this;
         }
     });
 }); });
+var weatherDisplayError = document.getElementById('weatherDisplayError');
 function displayWeather(weatherData, forecastData) {
     var weatherDisplay = document.getElementById('weatherDisplay');
+    weatherDisplayError.innerHTML = "";
     if (weatherDisplay) {
-        weatherDisplay.innerHTML = "\n            <h2>Aktuelles Wetter in ".concat(weatherData.name, ", ").concat(weatherData.sys.country, "</h2>\n            <p>").concat(weatherData.weather[0].main, "</p>\n            <p>Temperatur: ").concat(weatherData.main.temp.toFixed(1), "\u00B0C</p>\n            <p>Luftfeuchtigkeit: ").concat(weatherData.main.humidity, "%</p>\n            <p>Luftfdruck: ").concat(weatherData.main.pressure, "hPa</p>\n            <p>Gef\u00FChlte Temp.: ").concat(weatherData.main.feels_like.toFixed(1), "\u00B0C</p>\n        ");
+        weatherDisplay.innerHTML = "\n            <h2>Aktuelles Wetter in ".concat(weatherData.name, ", ").concat(weatherData.sys.country, "</h2>\n            <p>").concat(getCurrentTime(weatherData.timezone), "</p>\n            <div class=\"d-flex justify-content-center align-items-center\">\n                        <img src=\"http://openweathermap.org/img/wn/").concat(weatherData.weather[0].icon, "@4x.png\" alt=\"Wettericon\">\n                        <h1>").concat(weatherData.main.temp.toFixed(1), "\u00B0C</h1>\n            </div>\n            <div class=\"d-flex justify-content-around\">\n            <p>Luftfeuchtigkeit: ").concat(weatherData.main.humidity, "%</p>\n            <p>Luftfdruck: ").concat(weatherData.main.pressure, "hPa</p>\n            <p>Gef\u00FChlte Temp.: ").concat(weatherData.main.feels_like.toFixed(1), "\u00B0C</p>\n            </div>\n            <h3 class=\"mt-4\">Wettervorhersage f\u00FCr die n\u00E4chsten Stunden:</h3>\n            <div class=\"row g-4 text-center\">\n                ").concat(forecastData.list.slice(0, 7).map(function (forecast) { return "\n                    <div class=\"forecast col\">\n                        <div class=\"forcast-hr-element\">\n                            <div class=\"bg-transparent\">\n                                <p class=\"card-text\">".concat(formatTime(forecast.dt_txt), "</p>\n                                <img src=\"http://openweathermap.org/img/wn/").concat(forecast.weather[0].icon, ".png\" alt=\"Wettericon\">\n                                <p class=\"card-text\">").concat(forecast.main.temp.toFixed(1), "\u00B0C</p>\n                            </div>\n                        </div>\n                    </div>\n                "); }).join(''), "\n            </div>\n        ");
         // Weitere Anzeigeoptionen für Wetterdaten und Wettervorhersage hier hinzufügen
     }
 }
 function displayWeatherError() {
-    var weatherDisplayError = document.getElementById('weatherDisplayError');
-    if (weatherDisplayError) {
-        weatherDisplayError.innerHTML = "<div class=\"alert alert-danger\" role=\"alert\">\n            Bitte \u00DCberpr\u00FCfe den gesuchten Ort in der Eingabe auf Richtigkeit!\n        </div>";
-    }
+    weatherDisplayError.innerHTML = "<div class=\"alert alert-danger\" role=\"alert\">\n    Bitte \u00DCberpr\u00FCfe den gesuchten ort in der Eingabe auf Richtigkeit!\n    </div>";
+}
+// Funktion zur Formatierung des Datums im europäischen Format und Anzeige des Wochentags
+function formatDate(dateString) {
+    var date = new Date(dateString.replace(/-/g, '/'));
+    var options = { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' };
+    return date.toLocaleDateString('de-DE').replace(/,/g, '');
+}
+// Funktion zur Formatierung der Uhrzeit
+function formatTime(dateString) {
+    var date = new Date(dateString.replace(/-/g, '/'));
+    return date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+}
+// Funktion zur Formatierung der Uhrzeit aus Unix-Zeitstempel
+function formatTimeFromUnix(unixTime, timezoneOffset) {
+    var date = new Date((unixTime + timezoneOffset) * 1000);
+    return date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+}
+// Funktion zur Anzeige der aktuellen Uhrzeit für den angegebenen Ort
+function getCurrentTime(timezoneOffset) {
+    var now = new Date();
+    var localTime = now.getTime() + (now.getTimezoneOffset() * 60000); // In Minuten
+    var targetTime = localTime + (timezoneOffset * 1000); // In Sekunden
+    var targetDate = new Date(targetTime);
+    var hours = targetDate.getHours().toString().padStart(2, '0');
+    var minutes = targetDate.getMinutes().toString().padStart(2, '0');
+    return "".concat(hours, ":").concat(minutes);
 }

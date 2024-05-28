@@ -1,8 +1,11 @@
 const express = require('express');
 const cors = require('cors');
+const dotenv = require('dotenv')
 
 const app = express();
 const port = 3000;
+
+dotenv.config();
 
 app.use(cors());
 
@@ -33,7 +36,7 @@ app.use(express.urlencoded({ extended: true }));
 app.post('/weather', async (req, res) => {
     try {
         const { cityName } = req.body;
-        const apiKey = '7b7466fa55b6b1ad97d9d04279507427';
+        const apiKey = process.env.WEATHER_API_KEY;
 
         const weatherApiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric`;
         const forecastApiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=metric`;
